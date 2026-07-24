@@ -57,7 +57,16 @@
     }
     .app-header h1 { font-size: 20px; font-weight: 800; letter-spacing: 0.5px; }
     .app-header .subtitle { font-size: 12px; opacity: 0.8; margin-top: 4px; }
-    .page-content { flex: 1; padding: 20px; padding-bottom: 90px; overflow-y: auto; }
+    .header-btn {
+      position: absolute; left: 16px; top: 50%; transform: translateY(-50%);
+      background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.25);
+      color: var(--white); padding: 6px 12px; border-radius: 10px;
+      font-size: 12px; cursor: pointer; font-family: inherit; font-weight: 600;
+      transition: background 0.2s;
+    }
+    .header-btn:active { background: rgba(255,255,255,0.2); }
+    .header-btn.right { left: auto; right: 16px; }
+    .page-content { flex: 1; padding: 20px; padding-bottom: 20px; overflow-y: auto; }
     .card {
       background: var(--white); border-radius: var(--radius); padding: 20px; margin-bottom: 16px;
       box-shadow: var(--shadow); border: 1px solid rgba(185,167,121,0.12);
@@ -87,21 +96,6 @@
     .btn-golden { background: linear-gradient(135deg, var(--golden-dark), var(--golden)); color: var(--white); }
     .btn-outline { background: transparent; border: 2px solid var(--primary); color: var(--primary); }
     .btn-small { padding: 8px 14px; font-size: 13px; width: auto; }
-    .bottom-nav {
-      position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
-      max-width: 480px; width: 100%; background: var(--white);
-      display: flex; border-top: 1px solid rgba(185,167,121,0.15);
-      box-shadow: 0 -4px 20px rgba(0,0,0,0.08); z-index: 100;
-      padding: 6px 0; padding-bottom: env(safe-area-inset-bottom, 6px);
-    }
-    .nav-item {
-      flex: 1; text-align: center; padding: 6px 4px; cursor: pointer;
-      color: var(--gray); font-size: 11px; font-weight: 500;
-      display: flex; flex-direction: column; align-items: center; gap: 2px;
-      background: none; border: none; font-family: inherit; transition: color 0.2s;
-    }
-    .nav-item.active { color: var(--primary); }
-    .nav-item .nav-icon { font-size: 22px; line-height: 1; }
     .subscriber-item {
       background: var(--white); border-radius: var(--radius-sm); padding: 18px 16px;
       margin-bottom: 12px; box-shadow: var(--shadow);
@@ -213,26 +207,30 @@
     .filter-row select:focus { border-color: var(--primary); }
 
     /* Dashboard Cards */
-    .dash-grid { display: flex; flex-direction: column; gap: 16px; padding-top: 8px; }
+    .dash-grid {
+      display: flex; flex-direction: column; gap: 16px;
+      flex: 1; justify-content: center;
+    }
     .dash-card {
-      background: var(--white); border-radius: var(--radius); padding: 28px 22px;
+      background: var(--white); border-radius: var(--radius); padding: 32px 24px;
       box-shadow: var(--shadow); border: 1px solid rgba(185,167,121,0.1);
-      display: flex; align-items: center; gap: 18px; cursor: pointer;
+      display: flex; align-items: center; gap: 20px; cursor: pointer;
       transition: all 0.2s; position: relative; overflow: hidden;
+      min-height: 100px;
     }
     .dash-card:active { transform: scale(0.98); }
     .dash-card .dash-icon {
-      width: 52px; height: 52px; border-radius: 14px;
+      width: 64px; height: 64px; border-radius: 18px;
       display: flex; align-items: center; justify-content: center;
-      font-size: 24px; flex-shrink: 0;
+      font-size: 30px; flex-shrink: 0;
     }
     .dash-card .dash-icon.green { background: rgba(66,129,119,0.12); }
     .dash-card .dash-icon.red { background: rgba(107,31,42,0.10); }
     .dash-card .dash-icon.gold { background: rgba(185,167,121,0.15); }
     .dash-card .dash-info { flex: 1; }
-    .dash-card .dash-info h3 { font-size: 16px; font-weight: 700; color: var(--dark); }
-    .dash-card .dash-info p { font-size: 12px; color: var(--gray); margin-top: 3px; }
-    .dash-card .dash-arrow { font-size: 18px; color: var(--primary); opacity: 0.5; }
+    .dash-card .dash-info h3 { font-size: 20px; font-weight: 700; color: var(--dark); }
+    .dash-card .dash-info p { font-size: 14px; color: var(--gray); margin-top: 4px; }
+    .dash-card .dash-arrow { font-size: 22px; color: var(--primary); opacity: 0.6; font-weight: 600; }
     .dash-card::after {
       content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
       border-radius: var(--radius) var(--radius) 0 0;
@@ -364,27 +362,6 @@
       }
     }
 
-    // --- Components ---
-    function Navbar({ active, setPage }) {
-      const items = [
-        { key: 'home', icon: '🏠', label: 'الرئيسية' },
-        { key: 'add', icon: '➕', label: 'إضافة' },
-        { key: 'subscribers', icon: '👥', label: 'المشتركون' },
-        { key: 'payments', icon: '💰', label: 'السداد' },
-      ]
-      return React.createElement('nav', { className: 'bottom-nav' },
-        items.map(item =>
-          React.createElement('button', {
-            key: item.key, className: `nav-item ${active === item.key ? 'active' : ''}`,
-            onClick: () => setPage(item.key)
-          },
-            React.createElement('span', { className: 'nav-icon' }, item.icon),
-            React.createElement('span', null, item.label)
-          )
-        )
-      )
-    }
-
     // ========== LOGIN ==========
     function Login() {
       const { setUser } = useContext(AuthContext)
@@ -433,7 +410,7 @@
 
     // ========== HOME (Dashboard Cards) ==========
     function Home() {
-      const { user, setPage } = useContext(AuthContext)
+      const { user, setPage, logout } = useContext(AuthContext)
       const [stats, setStats] = useState({ total: 0, due: 0, paid: 0 })
       useEffect(() => {
         (async () => {
@@ -452,15 +429,12 @@
       ]
 
       return React.createElement(React.Fragment, null,
-        React.createElement('header', { className: 'app-header' },
+        React.createElement('header', { className: 'app-header', style: { position: 'relative' } },
+          React.createElement('button', { className: 'header-btn', onClick: logout }, '🚪 خروج'),
           React.createElement('h1', null, 'Alhadel'),
           React.createElement('div', { className: 'subtitle' }, `مرحباً، ${user?.name}`)
         ),
-        React.createElement('div', { className: 'page-content' },
-          React.createElement('div', { className: 'welcome-section' },
-            React.createElement('h2', null, 'لوحة التحكم'),
-            React.createElement('p', null, `إجمالي المبالغ المتبقية: ${stats.due.toLocaleString()} ل.س`)
-          ),
+        React.createElement('div', { className: 'page-content', style: { display: 'flex', flexDirection: 'column' } },
           React.createElement('div', { className: 'dash-grid' },
             cards.map(c =>
               React.createElement('div', {
@@ -471,14 +445,11 @@
                   React.createElement('h3', null, c.title),
                   React.createElement('p', null, c.desc)
                 ),
-                React.createElement('div', { className: 'dash-arrow' },
-                  React.createElement('span', null, c.stat)
-                )
+                React.createElement('div', { className: 'dash-arrow' }, c.stat)
               )
             )
           )
-        ),
-        React.createElement(Navbar, { active: 'home', setPage })
+        )
       )
     }
 
@@ -502,7 +473,7 @@
         if (!name.trim() || !subscriptionSize.trim() || !amountDue.trim()) return
         setError(''); setSuccess('')
         try {
-          await db.addSubscriber({ name: name.trim(), city: city.trim(), subscription_size: subscriptionSize.trim(), amount_due: amountDue.trim(), custom_fields: [] })
+          await db.addSubscriber({ name: name.trim(), city: city.trim(), subscription_size: subscriptionSize.trim(), amount_due: amountDue.trim() })
           setName(''); setCity(''); setSubscriptionSize(''); setAmountDue('')
           setSuccess('تم إضافة المشترك بنجاح ✓'); loadStats()
           setTimeout(() => setSuccess(''), 3000)
@@ -510,7 +481,8 @@
       }
 
       return React.createElement(React.Fragment, null,
-        React.createElement('header', { className: 'app-header' },
+        React.createElement('header', { className: 'app-header', style: { position: 'relative' } },
+          React.createElement('button', { className: 'header-btn', onClick: () => setPage('home') }, '🔙 رجوع'),
           React.createElement('h1', null, 'إضافة مشترك'),
           React.createElement('div', { className: 'subtitle' }, `${stats.total} مشترك • ${stats.due.toLocaleString()} ل.س`)
         ),
@@ -535,8 +507,7 @@
               React.createElement('button', { type: 'submit', className: 'btn btn-primary', style: { marginTop: 8 } }, '➕ إضافة مشترك')
             )
           )
-        ),
-        React.createElement(Navbar, { active: 'add', setPage: useContext(AuthContext).setPage })
+        )
       )
     }
 
@@ -562,7 +533,8 @@
       })
 
       return React.createElement(React.Fragment, null,
-        React.createElement('header', { className: 'app-header' },
+        React.createElement('header', { className: 'app-header', style: { position: 'relative' } },
+          React.createElement('button', { className: 'header-btn', onClick: () => setPage('home') }, '🔙 رجوع'),
           React.createElement('h1', null, 'المشتركون'),
           React.createElement('div', { className: 'subtitle' }, `${subscribers.length} مشترك`)
         ),
@@ -612,7 +584,6 @@
               React.createElement('button', { className: 'btn btn-outline', onClick: () => setSelected(null), style: { flex: 1 } }, 'إغلاق'))
           )
         ),
-        React.createElement(Navbar, { active: 'subscribers', setPage })
       )
     }
 
@@ -651,7 +622,8 @@
       const totalPaid = payments.reduce((s, p) => s + (parseFloat(p.amount) || 0), 0)
 
       return React.createElement(React.Fragment, null,
-        React.createElement('header', { className: 'app-header' },
+        React.createElement('header', { className: 'app-header', style: { position: 'relative' } },
+          React.createElement('button', { className: 'header-btn', onClick: () => setPage('home') }, '🔙 رجوع'),
           React.createElement('h1', null, 'سداد الحسابات'),
           React.createElement('div', { className: 'subtitle' }, `المتبقي: ${totalDue.toLocaleString()} ل.س • المسدد: ${totalPaid.toLocaleString()} ل.س`)
         ),
@@ -723,7 +695,6 @@
             React.createElement('button', { className: 'btn btn-outline', style: { marginTop: 12 }, onClick: () => setSelectedSub(null) }, 'إغلاق')
           )
         ),
-        React.createElement(Navbar, { active: 'payments', setPage })
       )
     }
 
@@ -739,7 +710,7 @@
         else localStorage.removeItem('alhadel_user')
       }, [user])
 
-      const contextValue = { user, setUser, setPage }
+      const contextValue = { user, setUser, setPage, logout: () => { setUser(null); setPage('home') } }
       let content
       if (!user) {
         content = React.createElement(Login, null)
