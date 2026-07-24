@@ -20,11 +20,16 @@
       --danger-dark: #4a151e;
       --white: #ffffff;
       --gray: #3d3a3b;
+      --gray-light: #f5f5f5;
       --dark: #161616;
+      --shadow: 0 4px 16px rgba(0,0,0,0.08);
+      --shadow-lg: 0 8px 32px rgba(0,0,0,0.12);
+      --radius: 14px;
+      --radius-sm: 10px;
     }
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
-      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      font-family: 'Cairo','Segoe UI',system-ui,-apple-system,sans-serif;
       background: var(--golden-light);
       color: var(--dark);
       min-height: 100vh;
@@ -35,7 +40,7 @@
       margin: 0 auto;
       min-height: 100vh;
       background: var(--white);
-      box-shadow: 0 0 20px rgba(0,0,0,0.1);
+      box-shadow: 0 0 40px rgba(0,0,0,0.08);
       display: flex;
       flex-direction: column;
       position: relative;
@@ -43,149 +48,225 @@
     .app-header {
       background: linear-gradient(135deg, var(--primary-darker), var(--primary-dark), var(--primary));
       color: var(--white);
-      padding: 16px 20px;
+      padding: 20px 24px;
       text-align: center;
       position: sticky;
       top: 0;
       z-index: 100;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     }
-    .app-header h1 { font-size: 18px; font-weight: 700; letter-spacing: 1px; }
-    .app-header .subtitle { font-size: 11px; opacity: 0.8; margin-top: 2px; }
-    .page-content { flex: 1; padding: 16px; padding-bottom: 80px; overflow-y: auto; }
+    .app-header h1 { font-size: 20px; font-weight: 800; letter-spacing: 0.5px; }
+    .app-header .subtitle { font-size: 12px; opacity: 0.8; margin-top: 4px; }
+    .page-content { flex: 1; padding: 20px; padding-bottom: 90px; overflow-y: auto; }
     .card {
-      background: var(--white); border-radius: 12px; padding: 16px; margin-bottom: 12px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08); border: 1px solid rgba(185, 167, 121, 0.15);
+      background: var(--white); border-radius: var(--radius); padding: 20px; margin-bottom: 16px;
+      box-shadow: var(--shadow); border: 1px solid rgba(185,167,121,0.12);
+      transition: transform 0.2s, box-shadow 0.2s;
     }
-    .card-title { font-size: 14px; font-weight: 700; color: var(--primary-dark); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
-    .form-group { margin-bottom: 12px; }
-    .form-group label { display: block; font-size: 12px; font-weight: 600; color: var(--gray); margin-bottom: 4px; }
+    .card:active { transform: scale(0.98); }
+    .card-title { font-size: 15px; font-weight: 700; color: var(--primary-dark); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+    .form-group { margin-bottom: 16px; }
+    .form-group label { display: block; font-size: 13px; font-weight: 600; color: var(--gray); margin-bottom: 6px; }
     .form-group input, .form-group select {
-      width: 100%; padding: 10px 12px; border: 1.5px solid #ddd; border-radius: 8px;
+      width: 100%; padding: 12px 14px; border: 2px solid #e8e8e8; border-radius: var(--radius-sm);
       font-size: 14px; outline: none; font-family: inherit; direction: rtl;
+      transition: border-color 0.2s, box-shadow 0.2s;
     }
-    .form-group input:focus { border-color: var(--primary); box-shadow: 0 0 0 2px rgba(66,129,119,0.15); }
+    .form-group input:focus, .form-group select:focus {
+      border-color: var(--primary); box-shadow: 0 0 0 3px rgba(66,129,119,0.12);
+    }
     .btn {
-      display: inline-flex; align-items: center; justify-content: center; gap: 6px;
-      padding: 10px 20px; border: none; border-radius: 8px; font-size: 14px;
-      font-weight: 600; cursor: pointer; font-family: inherit; width: 100%;
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      padding: 12px 24px; border: none; border-radius: var(--radius-sm); font-size: 15px;
+      font-weight: 700; cursor: pointer; font-family: inherit; width: 100%;
+      transition: transform 0.15s, box-shadow 0.2s;
     }
-    .btn-primary { background: linear-gradient(135deg, var(--primary-dark), var(--primary)); color: var(--white); }
-    .btn-primary:active { transform: scale(0.98); opacity: 0.9; }
-    .btn-danger { background: var(--danger); color: var(--white); }
+    .btn:active { transform: scale(0.97); }
+    .btn-primary { background: linear-gradient(135deg, var(--primary-dark), var(--primary)); color: var(--white); box-shadow: 0 4px 12px rgba(5,66,57,0.3); }
+    .btn-danger { background: linear-gradient(135deg, var(--danger-dark), var(--danger)); color: var(--white); box-shadow: 0 4px 12px rgba(107,31,42,0.3); }
     .btn-golden { background: linear-gradient(135deg, var(--golden-dark), var(--golden)); color: var(--white); }
-    .btn-outline { background: transparent; border: 1.5px solid var(--primary); color: var(--primary); }
-    .btn-small { padding: 6px 12px; font-size: 12px; width: auto; }
+    .btn-outline { background: transparent; border: 2px solid var(--primary); color: var(--primary); }
+    .btn-small { padding: 8px 14px; font-size: 13px; width: auto; }
     .bottom-nav {
       position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
       max-width: 480px; width: 100%; background: var(--white);
-      display: flex; border-top: 1px solid rgba(185, 167, 121, 0.2);
-      box-shadow: 0 -2px 10px rgba(0,0,0,0.1); z-index: 100;
+      display: flex; border-top: 1px solid rgba(185,167,121,0.15);
+      box-shadow: 0 -4px 20px rgba(0,0,0,0.08); z-index: 100;
+      padding: 6px 0; padding-bottom: env(safe-area-inset-bottom, 6px);
     }
     .nav-item {
-      flex: 1; text-align: center; padding: 8px 4px; cursor: pointer;
-      color: var(--gray); font-size: 10px; font-weight: 500;
+      flex: 1; text-align: center; padding: 6px 4px; cursor: pointer;
+      color: var(--gray); font-size: 11px; font-weight: 500;
       display: flex; flex-direction: column; align-items: center; gap: 2px;
-      background: none; border: none; font-family: inherit;
+      background: none; border: none; font-family: inherit; transition: color 0.2s;
     }
-    .nav-item.active { color: var(--primary); background: rgba(66,129,119,0.08); }
-    .nav-item .nav-icon { font-size: 20px; line-height: 1; }
+    .nav-item.active { color: var(--primary); }
+    .nav-item .nav-icon { font-size: 22px; line-height: 1; }
     .subscriber-item {
-      background: var(--white); border-radius: 10px; padding: 12px; margin-bottom: 8px;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.06); border: 1px solid rgba(185, 167, 121, 0.12);
+      background: var(--white); border-radius: var(--radius-sm); padding: 14px;
+      margin-bottom: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      border: 1px solid rgba(185,167,121,0.1);
       display: flex; justify-content: space-between; align-items: center; cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.2s;
     }
+    .subscriber-item:active { transform: scale(0.98); box-shadow: 0 1px 4px rgba(0,0,0,0.05); }
     .subscriber-item .info { flex: 1; }
-    .subscriber-item .name { font-weight: 700; font-size: 14px; color: var(--dark); }
-    .subscriber-item .details { font-size: 12px; color: var(--gray); margin-top: 2px; }
-    .subscriber-item .amount { font-weight: 700; font-size: 16px; color: var(--danger); }
+    .subscriber-item .name { font-weight: 700; font-size: 15px; color: var(--dark); }
+    .subscriber-item .city-badge {
+      display: inline-block; font-size: 11px; color: var(--primary);
+      background: rgba(66,129,119,0.08); padding: 2px 8px; border-radius: 4px; margin-top: 4px;
+    }
+    .subscriber-item .details { font-size: 12px; color: var(--gray); margin-top: 4px; }
+    .subscriber-item .amount { font-weight: 800; font-size: 17px; color: var(--danger); white-space: nowrap; }
     .subscriber-item .amount.paid { color: var(--primary); }
-    .empty-state { text-align: center; padding: 40px 20px; color: var(--gray); }
-    .empty-state .icon { font-size: 48px; margin-bottom: 12px; opacity: 0.5; }
+    .empty-state { text-align: center; padding: 50px 20px; color: var(--gray); }
+    .empty-state .icon { font-size: 56px; margin-bottom: 12px; opacity: 0.4; }
+    .empty-state p { font-size: 15px; }
     .login-container {
       flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
       padding: 32px 24px; background: linear-gradient(180deg, var(--primary-darker), var(--primary-dark));
-      min-height: 100vh;
+      min-height: 100vh; position: relative; overflow: hidden;
+    }
+    .login-container::before {
+      content: ''; position: absolute; width: 200%; height: 200%;
+      background: radial-gradient(circle at 50% 0%, rgba(185,167,121,0.08), transparent 60%);
     }
     .login-logo {
-      width: 80px; height: 80px; background: var(--golden); border-radius: 50%;
-      display: flex; align-items: center; justify-content: center; margin-bottom: 16px;
-      font-size: 32px; font-weight: 900; color: var(--primary-darker);
+      width: 90px; height: 90px; background: linear-gradient(135deg, var(--golden-dark), var(--golden));
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      margin-bottom: 20px; font-size: 38px; font-weight: 900; color: var(--primary-darker);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.2); position: relative; z-index: 1;
     }
-    .login-title { color: var(--white); font-size: 24px; font-weight: 800; margin-bottom: 4px; }
-    .login-subtitle { color: var(--golden); font-size: 13px; margin-bottom: 32px; }
-    .login-card { background: var(--white); border-radius: 16px; padding: 24px; width: 100%; max-width: 360px; box-shadow: 0 8px 32px rgba(0,0,0,0.2); }
-    .login-error { background: rgba(107,31,42,0.1); color: var(--danger); padding: 10px; border-radius: 8px; font-size: 13px; text-align: center; margin-bottom: 12px; border: 1px solid rgba(107,31,42,0.2); }
+    .login-title { color: var(--white); font-size: 28px; font-weight: 800; margin-bottom: 4px; position: relative; z-index: 1; }
+    .login-subtitle { color: var(--golden); font-size: 14px; margin-bottom: 36px; position: relative; z-index: 1; }
+    .login-card { background: var(--white); border-radius: 20px; padding: 28px; width: 100%; max-width: 360px; box-shadow: var(--shadow-lg); position: relative; z-index: 1; }
+    .login-error {
+      background: linear-gradient(135deg, rgba(107,31,42,0.08), rgba(107,31,42,0.04));
+      color: var(--danger); padding: 12px; border-radius: var(--radius-sm);
+      font-size: 13px; text-align: center; margin-bottom: 16px;
+      border: 1px solid rgba(107,31,42,0.15);
+    }
     .custom-field-row { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; }
     .custom-field-row input { flex: 1; }
     .field-badge {
-      display: inline-flex; align-items: center; gap: 4px;
-      background: rgba(66,129,119,0.1); color: var(--primary-dark);
-      border-radius: 6px; padding: 4px 10px; font-size: 12px; margin: 2px;
+      display: inline-flex; align-items: center; gap: 6px;
+      background: linear-gradient(135deg, rgba(66,129,119,0.08), rgba(66,129,119,0.04));
+      color: var(--primary-dark); border-radius: 8px; padding: 6px 12px;
+      font-size: 12px; margin: 3px; border: 1px solid rgba(66,129,119,0.1);
     }
     .field-badge .remove-field { cursor: pointer; font-weight: 700; color: var(--danger); margin-right: 4px; }
     .payment-row {
       display: flex; justify-content: space-between; align-items: center;
-      padding: 8px 0; border-bottom: 1px solid #f0f0f0; font-size: 13px;
+      padding: 10px 0; border-bottom: 1px solid #f0f0f0; font-size: 13px;
     }
     .payment-row:last-child { border-bottom: none; }
     .payment-amount { font-weight: 700; color: var(--primary); }
     .modal-overlay {
-      position: fixed; inset: 0; background: rgba(0,0,0,0.5);
-      display: flex; align-items: center; justify-content: center; z-index: 200; padding: 20px;
+      position: fixed; inset: 0; background: rgba(0,0,0,0.45);
+      display: flex; align-items: center; justify-content: center; z-index: 200;
+      padding: 20px; animation: fadeIn 0.2s;
     }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     .modal-content {
-      background: var(--white); border-radius: 16px; padding: 20px;
+      background: var(--white); border-radius: 20px; padding: 24px;
       width: 100%; max-width: 400px; max-height: 80vh; overflow-y: auto;
+      animation: slideUp 0.25s ease;
     }
-    .modal-content h3 { font-size: 16px; color: var(--primary-dark); margin-bottom: 16px; text-align: center; }
-    .subscriber-detail { padding: 8px 0; border-bottom: 1px solid #f0f0f0; }
+    @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    .modal-content h3 { font-size: 17px; color: var(--primary-dark); margin-bottom: 16px; text-align: center; }
+    .subscriber-detail { padding: 10px 0; border-bottom: 1px solid #f0f0f0; }
     .subscriber-detail:last-child { border-bottom: none; }
-    .subscriber-detail .label { font-size: 11px; color: var(--gray); }
-    .subscriber-detail .value { font-size: 14px; font-weight: 600; color: var(--dark); }
+    .subscriber-detail .label { font-size: 12px; color: var(--gray); }
+    .subscriber-detail .value { font-size: 15px; font-weight: 600; color: var(--dark); }
     .quick-amounts { display: flex; gap: 8px; flex-wrap: wrap; margin: 12px 0; }
     .quick-amount {
-      padding: 6px 14px; border: 1.5px solid var(--primary); border-radius: 6px;
+      padding: 8px 16px; border: 2px solid var(--primary); border-radius: 8px;
       background: transparent; color: var(--primary); font-size: 13px;
       font-weight: 600; cursor: pointer; font-family: inherit;
+      transition: all 0.2s;
     }
     .quick-amount:active { background: var(--primary); color: var(--white); }
     .search-bar {
-      width: 100%; padding: 10px 12px; border: 1.5px solid #ddd; border-radius: 8px;
-      font-size: 14px; outline: none; margin-bottom: 12px; font-family: inherit; direction: rtl;
+      width: 100%; padding: 12px 14px; border: 2px solid #e8e8e8; border-radius: var(--radius-sm);
+      font-size: 14px; outline: none; margin-bottom: 16px; font-family: inherit; direction: rtl;
+      transition: border-color 0.2s, box-shadow 0.2s;
     }
-    .search-bar:focus { border-color: var(--primary); box-shadow: 0 0 0 2px rgba(66,129,119,0.15); }
-    .stats-row { display: flex; gap: 8px; margin-bottom: 16px; }
+    .search-bar:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(66,129,119,0.12); }
+    .stats-row { display: flex; gap: 12px; margin-bottom: 20px; }
     .stat-box {
-      flex: 1; background: var(--white); border-radius: 10px; padding: 12px;
-      text-align: center; border: 1px solid rgba(185, 167, 121, 0.15);
+      flex: 1; background: var(--white); border-radius: var(--radius); padding: 16px;
+      text-align: center; border: 1px solid rgba(185,167,121,0.12); box-shadow: var(--shadow);
     }
-    .stat-box .stat-number { font-size: 20px; font-weight: 800; color: var(--primary-dark); }
-    .stat-box .stat-label { font-size: 11px; color: var(--gray); margin-top: 2px; }
+    .stat-box .stat-number { font-size: 22px; font-weight: 800; color: var(--primary-dark); }
+    .stat-box .stat-label { font-size: 12px; color: var(--gray); margin-top: 4px; font-weight: 500; }
     .success-msg {
-      background: rgba(66,129,119,0.1); color: var(--primary-dark); padding: 10px;
-      border-radius: 8px; font-size: 13px; text-align: center; margin-bottom: 12px;
-      border: 1px solid rgba(66,129,119,0.2);
+      background: linear-gradient(135deg, rgba(66,129,119,0.1), rgba(66,129,119,0.05));
+      color: var(--primary-dark); padding: 12px; border-radius: var(--radius-sm);
+      font-size: 13px; text-align: center; margin-bottom: 16px;
+      border: 1px solid rgba(66,129,119,0.15);
     }
     .error-msg {
-      background: rgba(107,31,42,0.1); color: var(--danger); padding: 10px;
-      border-radius: 8px; font-size: 13px; text-align: center; margin-bottom: 12px;
-      border: 1px solid rgba(107,31,42,0.2);
+      background: linear-gradient(135deg, rgba(107,31,42,0.08), rgba(107,31,42,0.04));
+      color: var(--danger); padding: 12px; border-radius: var(--radius-sm);
+      font-size: 13px; text-align: center; margin-bottom: 16px;
+      border: 1px solid rgba(107,31,42,0.15);
     }
+    .filter-row {
+      display: flex; gap: 10px; margin-bottom: 16px;
+    }
+    .filter-row select {
+      flex: 1; padding: 10px 12px; border: 2px solid #e8e8e8; border-radius: var(--radius-sm);
+      font-size: 13px; outline: none; font-family: inherit; direction: rtl;
+      background: var(--white);
+    }
+    .filter-row select:focus { border-color: var(--primary); }
+
+    /* Dashboard Cards */
+    .dash-grid { display: flex; flex-direction: column; gap: 14px; padding-top: 8px; }
+    .dash-card {
+      background: var(--white); border-radius: var(--radius); padding: 22px 20px;
+      box-shadow: var(--shadow); border: 1px solid rgba(185,167,121,0.1);
+      display: flex; align-items: center; gap: 16px; cursor: pointer;
+      transition: all 0.2s; position: relative; overflow: hidden;
+    }
+    .dash-card:active { transform: scale(0.98); }
+    .dash-card .dash-icon {
+      width: 52px; height: 52px; border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 24px; flex-shrink: 0;
+    }
+    .dash-card .dash-icon.green { background: rgba(66,129,119,0.12); }
+    .dash-card .dash-icon.red { background: rgba(107,31,42,0.10); }
+    .dash-card .dash-icon.gold { background: rgba(185,167,121,0.15); }
+    .dash-card .dash-info { flex: 1; }
+    .dash-card .dash-info h3 { font-size: 16px; font-weight: 700; color: var(--dark); }
+    .dash-card .dash-info p { font-size: 12px; color: var(--gray); margin-top: 3px; }
+    .dash-card .dash-arrow { font-size: 18px; color: var(--primary); opacity: 0.5; }
+    .dash-card::after {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      border-radius: var(--radius) var(--radius) 0 0;
+    }
+    .dash-card.green-card::after { background: linear-gradient(90deg, var(--primary), var(--primary-dark)); }
+    .dash-card.red-card::after { background: linear-gradient(90deg, var(--danger), var(--danger-dark)); }
+    .dash-card.gold-card::after { background: linear-gradient(90deg, var(--golden), var(--golden-dark)); }
+
+    .welcome-section { text-align: center; padding: 16px 0 8px; }
+    .welcome-section h2 { font-size: 20px; font-weight: 700; color: var(--dark); }
+    .welcome-section p { font-size: 13px; color: var(--gray); margin-top: 4px; }
     @media (max-width: 480px) {
       .quick-amounts { gap: 6px; }
-      .quick-amount { padding: 5px 10px; font-size: 12px; }
+      .quick-amount { padding: 6px 12px; font-size: 12px; }
     }
   </style>
 </head>
 <body>
   <div id="root"></div>
   <script type="text/babel">
-    const { useState, useEffect, createContext, useContext } = React
+    const { useState, useEffect, createContext, useContext, useMemo } = React
 
     const AuthContext = createContext()
 
-    // --- Supabase Config ---
+    // --- Supabase ---
     const SUPABASE_URL = 'https://oasehtofuqpsgpaqgkcy.supabase.co'
     const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9hc2VodG9mdXFwc2dwYXFna2N5Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4NDg4NDk2MywiZXhwIjoyMTAwNDYwOTYzfQ.vuNscFXM2puBMEaSfVyYc6gIXhGgT-PRPPub6u1JqOw'
 
@@ -199,7 +280,7 @@
         ...options.headers
       }
       const res = await fetch(url, { ...options, headers })
-      if (options.method === 'DELETE' && res.status === 204) return null
+      if (options.method === 'DELETE' && (res.status === 204 || res.status === 200)) return null
       if (!res.ok) {
         const text = await res.text()
         throw new Error(`Supabase ${res.status}: ${text}`)
@@ -208,7 +289,7 @@
       return res.json()
     }
 
-    // --- localStorage Fallback ---
+    // --- localStorage ---
     const STORAGE_KEY = 'alhadel_net_data'
     function getDefaultData() { return { subscribers: [], payments: [], nextId: 1 } }
     function loadLocal() {
@@ -217,38 +298,29 @@
     }
     function saveLocal(data) { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)) }
 
-    // --- DB Layer (Supabase first, localStorage fallback) ---
+    // --- DB ---
     const db = {
       async getSubscribers() {
         try {
           const data = await supabaseFetch('subscribers?order=created_at.desc')
           if (data) return data.map(s => ({
-            ...s,
-            custom_fields: typeof s.custom_fields === 'string' ? JSON.parse(s.custom_fields) : (s.custom_fields || [])
+            ...s, custom_fields: typeof s.custom_fields === 'string' ? JSON.parse(s.custom_fields) : (s.custom_fields || [])
           }))
         } catch {}
         const store = loadLocal()
         return store.subscribers.map(s => ({
-          ...s,
-          custom_fields: typeof s.custom_fields === 'string' ? JSON.parse(s.custom_fields) : (s.custom_fields || [])
+          ...s, custom_fields: typeof s.custom_fields === 'string' ? JSON.parse(s.custom_fields) : (s.custom_fields || [])
         }))
       },
-
       async addSubscriber(subscriber) {
         try {
-          const data = await supabaseFetch('subscribers', {
-            method: 'POST',
-            body: JSON.stringify(subscriber)
-          })
+          const data = await supabaseFetch('subscribers', { method: 'POST', body: JSON.stringify(subscriber) })
           if (data && data[0]) return data[0]
         } catch {}
         const store = loadLocal()
         const newSub = { id: String(store.nextId++), ...subscriber, created_at: new Date().toISOString(), updated_at: new Date().toISOString() }
-        store.subscribers.unshift(newSub)
-        saveLocal(store)
-        return newSub
+        store.subscribers.unshift(newSub); saveLocal(store); return newSub
       },
-
       async deleteSubscriber(id) {
         try {
           await supabaseFetch(`subscribers?id=eq.${id}`, { method: 'DELETE' })
@@ -260,7 +332,6 @@
         store.payments = store.payments.filter(p => p.subscriber_id !== id)
         saveLocal(store)
       },
-
       async getPayments(subscriberId) {
         try {
           const data = await supabaseFetch(`payments?subscriber_id=eq.${subscriberId}&order=created_at.desc`)
@@ -269,21 +340,16 @@
         const store = loadLocal()
         return store.payments.filter(p => p.subscriber_id === subscriberId).sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
       },
-
-async addPayment(payment) {
+      async addPayment(payment) {
         try {
-          const data = await supabaseFetch('payments', {
-            method: 'POST',
-            body: JSON.stringify(payment)
-          })
+          const data = await supabaseFetch('payments', { method: 'POST', body: JSON.stringify(payment) })
           if (data && data[0]) {
             const subs = await supabaseFetch(`subscribers?id=eq.${payment.subscriber_id}`)
             if (subs && subs[0]) {
               const currentDue = parseFloat(subs[0].amount_due) || 0
               const newDue = Math.max(0, currentDue - (parseFloat(payment.amount) || 0))
               await supabaseFetch(`subscribers?id=eq.${payment.subscriber_id}`, {
-                method: 'PATCH',
-                body: JSON.stringify({ amount_due: String(newDue) }),
+                method: 'PATCH', body: JSON.stringify({ amount_due: String(newDue) }),
                 headers: { 'Prefer': 'return=minimal' }
               })
             }
@@ -299,10 +365,8 @@ async addPayment(payment) {
             Math.max(0, (parseFloat(store.subscribers[subIdx].amount_due) || 0) - (parseFloat(payment.amount) || 0))
           )
         }
-        saveLocal(store)
-        return newPayment
+        saveLocal(store); return newPayment
       },
-
       async getAllPayments() {
         try {
           const data = await supabaseFetch('payments?select=*,subscribers(name)&order=created_at.desc')
@@ -313,23 +377,29 @@ async addPayment(payment) {
           ...p,
           subscriber_name: store.subscribers.find(s => s.id === p.subscriber_id)?.name || 'محذوف'
         })).sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+      },
+      // Admin auth
+      async checkAdmin(email, password) {
+        try {
+          const data = await supabaseFetch(`admins?email=eq.${encodeURIComponent(email)}&password=eq.${encodeURIComponent(password)}`)
+          if (data && data.length > 0) return data[0]
+        } catch {}
+        return null
       }
     }
 
     // --- Components ---
-
-    function Navbar({ active }) {
-      const { setPage } = useContext(AuthContext)
+    function Navbar({ active, setPage }) {
       const items = [
-        { key: 'dashboard', icon: '+', label: 'إضافة' },
+        { key: 'home', icon: '🏠', label: 'الرئيسية' },
+        { key: 'add', icon: '➕', label: 'إضافة' },
         { key: 'subscribers', icon: '👥', label: 'المشتركون' },
         { key: 'payments', icon: '💰', label: 'السداد' },
       ]
       return React.createElement('nav', { className: 'bottom-nav' },
         items.map(item =>
           React.createElement('button', {
-            key: item.key,
-            className: `nav-item ${active === item.key ? 'active' : ''}`,
+            key: item.key, className: `nav-item ${active === item.key ? 'active' : ''}`,
             onClick: () => setPage(item.key)
           },
             React.createElement('span', { className: 'nav-icon' }, item.icon),
@@ -339,21 +409,34 @@ async addPayment(payment) {
       )
     }
 
+    // ========== LOGIN ==========
     function Login() {
       const { setUser } = useContext(AuthContext)
       const [email, setEmail] = useState('')
       const [password, setPassword] = useState('')
       const [error, setError] = useState('')
-      const handleSubmit = (e) => {
-        e.preventDefault(); setError('')
+      const [loading, setLoading] = useState(false)
+
+      const handleSubmit = async (e) => {
+        e.preventDefault(); setError(''); setLoading(true)
+        try {
+          const admin = await db.checkAdmin(email, password)
+          if (admin) {
+            setUser({ email: admin.email, name: admin.name || 'مدير النظام' })
+            setLoading(false); return
+          }
+        } catch {}
+        // Fallback to hardcoded if DB fails
         if (email === 'odayalsalh1@gmail.com' && password === 'oday2001') {
           setUser({ email, name: 'مدير النظام' })
         } else {
           setError('البريد الإلكتروني أو كلمة السر غير صحيحة')
         }
+        setLoading(false)
       }
+
       return React.createElement('div', { className: 'login-container' },
-        React.createElement('div', { className: 'login-logo' }, 'a'),
+        React.createElement('div', { className: 'login-logo' }, 'A'),
         React.createElement('h1', { className: 'login-title' }, 'Alhadel'),
         React.createElement('p', { className: 'login-subtitle' }, 'نظام إدارة المشتركين'),
         React.createElement('div', { className: 'login-card' },
@@ -361,19 +444,72 @@ async addPayment(payment) {
             error && React.createElement('div', { className: 'login-error' }, error),
             React.createElement('div', { className: 'form-group' },
               React.createElement('label', null, 'البريد الإلكتروني'),
-              React.createElement('input', { type: 'email', value: email, onChange: e => setEmail(e.target.value), placeholder: 'admin@alhadel.net', required: true })),
+              React.createElement('input', { type: 'email', value: email, onChange: e => setEmail(e.target.value), placeholder: 'admin@alhadel.com', required: true })),
             React.createElement('div', { className: 'form-group' },
               React.createElement('label', null, 'كلمة السر'),
               React.createElement('input', { type: 'password', value: password, onChange: e => setPassword(e.target.value), placeholder: '••••••••', required: true })),
-            React.createElement('button', { type: 'submit', className: 'btn btn-primary', style: { marginTop: 8 } }, 'دخول')
+            React.createElement('button', { type: 'submit', className: 'btn btn-primary', style: { marginTop: 4 }, disabled: loading },
+              loading ? 'جاري تسجيل الدخول...' : 'دخول')
           )
         )
       )
     }
 
-    function Dashboard() {
-      const { user } = useContext(AuthContext)
+    // ========== HOME (Dashboard Cards) ==========
+    function Home() {
+      const { user, setPage } = useContext(AuthContext)
+      const [stats, setStats] = useState({ total: 0, due: 0, paid: 0 })
+      useEffect(() => {
+        (async () => {
+          const subs = await db.getSubscribers()
+          const pays = await db.getAllPayments()
+          const totalDue = subs.reduce((s, sub) => s + (parseFloat(sub.amount_due) || 0), 0)
+          const totalPaid = pays.reduce((s, p) => s + (parseFloat(p.amount) || 0), 0)
+          setStats({ total: subs.length, due: totalDue, paid: totalPaid })
+        })()
+      }, [])
+
+      const cards = [
+        { key: 'add', icon: '➕', title: 'إضافة مشترك', desc: 'تسجيل مشترك جديد في النظام', color: 'green', stat: `${stats.total} مشترك` },
+        { key: 'subscribers', icon: '👥', title: 'المشتركون', desc: 'عرض وإدارة جميع المشتركين', color: 'gold', stat: `${stats.due.toLocaleString()} ل.س` },
+        { key: 'payments', icon: '💰', title: 'سداد الحسابات', desc: 'تسديد دفعات المشتركين', color: 'red', stat: `${stats.paid.toLocaleString()} ل.س مدفوع` },
+      ]
+
+      return React.createElement(React.Fragment, null,
+        React.createElement('header', { className: 'app-header' },
+          React.createElement('h1', null, 'Alhadel'),
+          React.createElement('div', { className: 'subtitle' }, `مرحباً، ${user?.name}`)
+        ),
+        React.createElement('div', { className: 'page-content' },
+          React.createElement('div', { className: 'welcome-section' },
+            React.createElement('h2', null, 'لوحة التحكم'),
+            React.createElement('p', null, `إجمالي المبالغ المتبقية: ${stats.due.toLocaleString()} ل.س`)
+          ),
+          React.createElement('div', { className: 'dash-grid' },
+            cards.map(c =>
+              React.createElement('div', {
+                key: c.key, className: `dash-card ${c.color}-card`, onClick: () => setPage(c.key)
+              },
+                React.createElement('div', { className: `dash-icon ${c.color}` }, c.icon),
+                React.createElement('div', { className: 'dash-info' },
+                  React.createElement('h3', null, c.title),
+                  React.createElement('p', null, c.desc)
+                ),
+                React.createElement('div', { className: 'dash-arrow' },
+                  React.createElement('span', null, c.stat)
+                )
+              )
+            )
+          )
+        ),
+        React.createElement(Navbar, { active: 'home', setPage })
+      )
+    }
+
+    // ========== ADD SUBSCRIBER ==========
+    function AddSubscriber() {
       const [name, setName] = useState('')
+      const [city, setCity] = useState('')
       const [subscriptionSize, setSubscriptionSize] = useState('')
       const [amountDue, setAmountDue] = useState('')
       const [customFields, setCustomFields] = useState([])
@@ -382,11 +518,11 @@ async addPayment(payment) {
       const [success, setSuccess] = useState('')
       const [error, setError] = useState('')
       const [stats, setStats] = useState({ total: 0, due: 0 })
+
       useEffect(() => { loadStats() }, [])
       async function loadStats() {
         const subs = await db.getSubscribers()
-        const totalDue = subs.reduce((sum, s) => sum + (parseFloat(s.amount_due) || 0), 0)
-        setStats({ total: subs.length, due: totalDue })
+        setStats({ total: subs.length, due: subs.reduce((s, sub) => s + (parseFloat(sub.amount_due) || 0), 0) })
       }
       const addField = () => {
         if (!fieldName.trim()) return
@@ -398,37 +534,21 @@ async addPayment(payment) {
         if (!name.trim() || !subscriptionSize.trim() || !amountDue.trim()) return
         setError(''); setSuccess('')
         try {
-          await db.addSubscriber({
-            name: name.trim(),
-            subscription_size: subscriptionSize.trim(),
-            amount_due: amountDue.trim(),
-            custom_fields: customFields,
-          })
-          setName(''); setSubscriptionSize(''); setAmountDue(''); setCustomFields([])
-          setSuccess('تم إضافة المشترك بنجاح ✓')
-          loadStats()
+          await db.addSubscriber({ name: name.trim(), city: city.trim(), subscription_size: subscriptionSize.trim(), amount_due: amountDue.trim(), custom_fields: customFields })
+          setName(''); setCity(''); setSubscriptionSize(''); setAmountDue(''); setCustomFields([])
+          setSuccess('تم إضافة المشترك بنجاح ✓'); loadStats()
           setTimeout(() => setSuccess(''), 3000)
-        } catch (err) {
-          setError('فشل الإضافة: ' + err.message)
-          setTimeout(() => setError(''), 4000)
-        }
+        } catch (err) { setError('فشل الإضافة: ' + err.message); setTimeout(() => setError(''), 4000) }
       }
+
       return React.createElement(React.Fragment, null,
         React.createElement('header', { className: 'app-header' },
-          React.createElement('h1', null, 'Alhadel'),
-          React.createElement('div', { className: 'subtitle' }, `مرحباً، ${user?.name}`)
+          React.createElement('h1', null, 'إضافة مشترك'),
+          React.createElement('div', { className: 'subtitle' }, `${stats.total} مشترك • ${stats.due.toLocaleString()} ل.س`)
         ),
         React.createElement('div', { className: 'page-content' },
-          React.createElement('div', { className: 'stats-row' },
-            React.createElement('div', { className: 'stat-box' },
-              React.createElement('div', { className: 'stat-number' }, stats.total),
-              React.createElement('div', { className: 'stat-label' }, 'إجمالي المشتركين')),
-            React.createElement('div', { className: 'stat-box' },
-              React.createElement('div', { className: 'stat-number', style: { color: 'var(--danger)' } }, `${stats.due.toLocaleString()} د.ع`),
-              React.createElement('div', { className: 'stat-label' }, 'إجمالي المبالغ'))
-          ),
           React.createElement('div', { className: 'card' },
-            React.createElement('div', { className: 'card-title' }, '➕ إضافة مشترك جديد'),
+            React.createElement('div', { className: 'card-title' }, '➕ تسجيل مشترك جديد'),
             success && React.createElement('div', { className: 'success-msg' }, success),
             error && React.createElement('div', { className: 'error-msg' }, error),
             React.createElement('form', { onSubmit: handleSubmit },
@@ -436,35 +556,41 @@ async addPayment(payment) {
                 React.createElement('label', null, 'اسم المشترك'),
                 React.createElement('input', { value: name, onChange: e => setName(e.target.value), placeholder: 'أدخل اسم المشترك', required: true })),
               React.createElement('div', { className: 'form-group' },
+                React.createElement('label', null, 'المدينة'),
+                React.createElement('input', { value: city, onChange: e => setCity(e.target.value), placeholder: 'مثال: دمشق - حلب - حمص' })),
+              React.createElement('div', { className: 'form-group' },
                 React.createElement('label', null, 'حجم الاشتراك الشهري'),
                 React.createElement('input', { value: subscriptionSize, onChange: e => setSubscriptionSize(e.target.value), placeholder: 'مثال: 10 ميجا / 20 ميجا', required: true })),
               React.createElement('div', { className: 'form-group' },
-                React.createElement('label', null, 'المبلغ المطلوب (دينار عراقي)'),
+                React.createElement('label', null, 'المبلغ المطلوب (ليرة سورية)'),
                 React.createElement('input', { type: 'number', value: amountDue, onChange: e => setAmountDue(e.target.value), placeholder: 'مثال: 25000', required: true })),
-              React.createElement('div', { style: { borderTop: '1px solid #eee', paddingTop: 12, marginTop: 4 } },
-                React.createElement('label', { style: { fontSize: 12, fontWeight: 600, color: 'var(--gray)', display: 'block', marginBottom: 8 } }, '🏷️ حقول إضافية'),
+              React.createElement('div', { style: { borderTop: '1px solid #eee', paddingTop: 14, marginTop: 4 } },
+                React.createElement('label', { style: { fontSize: 13, fontWeight: 600, color: 'var(--gray)', display: 'block', marginBottom: 8 } }, '🏷️ حقول إضافية'),
                 customFields.map((field, idx) =>
                   React.createElement('div', { key: idx, className: 'field-badge' },
                     React.createElement('span', null, `${field.name}: ${field.value}`),
-                    React.createElement('span', { className: 'remove-field', onClick: () => setCustomFields(customFields.filter((_, i) => i !== idx)) }, '×')
-                  )
+                    React.createElement('span', { className: 'remove-field', onClick: () => setCustomFields(customFields.filter((_, i) => i !== idx)) }, '×'))
                 ),
                 React.createElement('div', { className: 'custom-field-row' },
                   React.createElement('input', { value: fieldName, onChange: e => setFieldName(e.target.value), placeholder: 'اسم الحقل', style: { fontSize: 12 } }),
                   React.createElement('input', { value: fieldValue, onChange: e => setFieldValue(e.target.value), placeholder: 'القيمة', style: { fontSize: 12 } }),
-                  React.createElement('button', { type: 'button', className: 'btn btn-small btn-outline', onClick: addField }, '➕'))),
-              React.createElement('button', { type: 'submit', className: 'btn btn-primary', style: { marginTop: 12 } }, '➕ إضافة مشترك')
+                  React.createElement('button', { type: 'button', className: 'btn btn-small btn-outline', onClick: addField }, '➕'))
+              ),
+              React.createElement('button', { type: 'submit', className: 'btn btn-primary', style: { marginTop: 14 } }, '➕ إضافة مشترك')
             )
           )
         ),
-        React.createElement(Navbar, { active: 'dashboard' })
+        React.createElement(Navbar, { active: 'add', setPage: useContext(AuthContext).setPage })
       )
     }
 
+    // ========== SUBSCRIBERS ==========
     function Subscribers() {
       const [subscribers, setSubscribers] = useState([])
       const [search, setSearch] = useState('')
+      const [cityFilter, setCityFilter] = useState('')
       const [selected, setSelected] = useState(null)
+      const { setPage } = useContext(AuthContext)
       useEffect(() => { load() }, [])
       async function load() { setSubscribers(await db.getSubscribers()) }
       async function handleDelete(id) {
@@ -472,10 +598,13 @@ async addPayment(payment) {
           await db.deleteSubscriber(id); load(); setSelected(null)
         }
       }
-      const filtered = subscribers.filter(s =>
-        s.name.toLowerCase().includes(search.toLowerCase()) ||
-        (s.subscription_size && s.subscription_size.toLowerCase().includes(search.toLowerCase()))
-      )
+      const cities = [...new Set(subscribers.map(s => s.city).filter(Boolean))]
+      const filtered = subscribers.filter(s => {
+        const matchName = s.name.toLowerCase().includes(search.toLowerCase())
+        const matchCity = !cityFilter || s.city === cityFilter
+        return matchName && matchCity
+      })
+
       return React.createElement(React.Fragment, null,
         React.createElement('header', { className: 'app-header' },
           React.createElement('h1', null, 'المشتركون'),
@@ -483,39 +612,48 @@ async addPayment(payment) {
         ),
         React.createElement('div', { className: 'page-content' },
           React.createElement('input', { className: 'search-bar', value: search, onChange: e => setSearch(e.target.value), placeholder: '🔍 بحث عن مشترك...' }),
+          cities.length > 0 && React.createElement('div', { className: 'filter-row' },
+            React.createElement('select', { value: cityFilter, onChange: e => setCityFilter(e.target.value) },
+              React.createElement('option', { value: '' }, 'كل المدن'),
+              cities.map(c => React.createElement('option', { key: c, value: c }, c))
+            )
+          ),
           filtered.length === 0
             ? React.createElement('div', { className: 'empty-state' },
                 React.createElement('div', { className: 'icon' }, '👥'),
-                React.createElement('p', null, 'لا يوجد مشتركون بعد'))
+                React.createElement('p', null, 'لا يوجد مشتركون'))
             : filtered.map(sub =>
                 React.createElement('div', { key: sub.id, className: 'subscriber-item', onClick: () => setSelected(sub) },
                   React.createElement('div', { className: 'info' },
                     React.createElement('div', { className: 'name' }, sub.name),
+                    sub.city && React.createElement('div', { className: 'city-badge' }, `📍 ${sub.city}`),
                     React.createElement('div', { className: 'details' },
                       sub.subscription_size +
                       (sub.custom_fields && sub.custom_fields.length > 0
-                        ? ' • ' + sub.custom_fields.map(f => `${f.name}: ${f.value}`).join(' • ')
-                        : ''))),
+                        ? ' • ' + sub.custom_fields.map(f => `${f.name}: ${f.value}`).join(' • ') : ''))
+                  ),
                   React.createElement('div', { className: `amount ${parseFloat(sub.amount_due) <= 0 ? 'paid' : ''}` },
-                    parseFloat(sub.amount_due) <= 0 ? 'مدفوع' : `${Number(sub.amount_due).toLocaleString()} د.ع`)
+                    parseFloat(sub.amount_due) <= 0 ? 'مدفوع' : `${Number(sub.amount_due).toLocaleString()} ل.س`)
                 )
               )
         ),
         selected && React.createElement('div', { className: 'modal-overlay', onClick: () => setSelected(null) },
           React.createElement('div', { className: 'modal-content', onClick: e => e.stopPropagation() },
             React.createElement('h3', null, selected.name),
+            selected.city && React.createElement('div', { className: 'subscriber-detail' },
+              React.createElement('div', { className: 'label' }, 'المدينة'),
+              React.createElement('div', { className: 'value' }, selected.city)),
             React.createElement('div', { className: 'subscriber-detail' },
               React.createElement('div', { className: 'label' }, 'حجم الاشتراك'),
               React.createElement('div', { className: 'value' }, selected.subscription_size)),
             React.createElement('div', { className: 'subscriber-detail' },
               React.createElement('div', { className: 'label' }, 'المبلغ المطلوب'),
               React.createElement('div', { className: 'value', style: { color: parseFloat(selected.amount_due) <= 0 ? 'var(--primary)' : 'var(--danger)' } },
-                parseFloat(selected.amount_due) <= 0 ? 'مدفوع بالكامل' : `${Number(selected.amount_due).toLocaleString()} د.ع`)),
+                parseFloat(selected.amount_due) <= 0 ? 'مدفوع بالكامل' : `${Number(selected.amount_due).toLocaleString()} ل.س`)),
             selected.custom_fields && selected.custom_fields.map((f, idx) =>
               React.createElement('div', { key: idx, className: 'subscriber-detail' },
                 React.createElement('div', { className: 'label' }, f.name),
-                React.createElement('div', { className: 'value' }, f.value))
-            ),
+                React.createElement('div', { className: 'value' }, f.value))),
             React.createElement('div', { className: 'subscriber-detail' },
               React.createElement('div', { className: 'label' }, 'تاريخ الإضافة'),
               React.createElement('div', { className: 'value' }, new Date(selected.created_at).toLocaleDateString('ar-IQ'))),
@@ -524,10 +662,11 @@ async addPayment(payment) {
               React.createElement('button', { className: 'btn btn-outline', onClick: () => setSelected(null), style: { flex: 1 } }, 'إغلاق'))
           )
         ),
-        React.createElement(Navbar, { active: 'subscribers' })
+        React.createElement(Navbar, { active: 'subscribers', setPage })
       )
     }
 
+    // ========== PAYMENTS ==========
     function Payments() {
       const [subscribers, setSubscribers] = useState([])
       const [payments, setPayments] = useState([])
@@ -536,35 +675,31 @@ async addPayment(payment) {
       const [paymentAmount, setPaymentAmount] = useState('')
       const [subPayments, setSubPayments] = useState([])
       const [loading, setLoading] = useState(false)
-      const [error, setError] = useState('')
+      const { setPage } = useContext(AuthContext)
       useEffect(() => { loadData() }, [])
       async function loadData() {
-        setSubscribers(await db.getSubscribers())
-        setPayments(await db.getAllPayments())
+        setSubscribers(await db.getSubscribers()); setPayments(await db.getAllPayments())
       }
       async function openPaymentModal(sub) {
-        setSelectedSub(sub); setPaymentAmount('')
-        setSubPayments(await db.getPayments(sub.id))
+        setSelectedSub(sub); setPaymentAmount(''); setSubPayments(await db.getPayments(sub.id))
       }
       async function handlePay() {
         if (!paymentAmount || parseFloat(paymentAmount) <= 0) return
-        const amount = parseFloat(paymentAmount)
-        const remaining = parseFloat(selectedSub.amount_due)
+        const amount = parseFloat(paymentAmount); const remaining = parseFloat(selectedSub.amount_due)
         if (amount > remaining) { alert('المبلغ المدخل أكبر من المبلغ المتبقي'); return }
-        setLoading(true); setError('')
-        try {
-          await db.addPayment({ subscriber_id: selectedSub.id, amount })
-          setSelectedSub(null); setPaymentAmount(''); loadData()
-        } catch (err) { setError('فشل عملية الدفع: ' + err.message) }
+        setLoading(true)
+        try { await db.addPayment({ subscriber_id: selectedSub.id, amount }); setSelectedSub(null); setPaymentAmount(''); loadData() }
+        catch (err) { alert('فشل: ' + err.message) }
         setLoading(false)
       }
       const filtered = subscribers.filter(s => s.name.toLowerCase().includes(search.toLowerCase()))
-      const totalDue = subscribers.reduce((sum, s) => sum + (parseFloat(s.amount_due) || 0), 0)
-      const totalPaid = payments.reduce((sum, p) => sum + (parseFloat(p.amount) || 0), 0)
+      const totalDue = subscribers.reduce((s, sub) => s + (parseFloat(sub.amount_due) || 0), 0)
+      const totalPaid = payments.reduce((s, p) => s + (parseFloat(p.amount) || 0), 0)
+
       return React.createElement(React.Fragment, null,
         React.createElement('header', { className: 'app-header' },
           React.createElement('h1', null, 'سداد الحسابات'),
-          React.createElement('div', { className: 'subtitle' }, `المتبقي: ${totalDue.toLocaleString()} د.ع • المسدد: ${totalPaid.toLocaleString()} د.ع`)
+          React.createElement('div', { className: 'subtitle' }, `المتبقي: ${totalDue.toLocaleString()} ل.س • المسدد: ${totalPaid.toLocaleString()} ل.س`)
         ),
         React.createElement('div', { className: 'page-content' },
           React.createElement('div', { className: 'stats-row' },
@@ -576,34 +711,36 @@ async addPayment(payment) {
               React.createElement('div', { className: 'stat-label' }, 'المتبقي'))
           ),
           React.createElement('input', { className: 'search-bar', value: search, onChange: e => setSearch(e.target.value), placeholder: '🔍 بحث عن مشترك...' }),
-          error && React.createElement('div', { className: 'error-msg' }, error),
           filtered.length === 0
             ? React.createElement('div', { className: 'empty-state' },
                 React.createElement('div', { className: 'icon' }, '💰'),
-                React.createElement('p', null, 'لا يوجد مشتركون بعد'))
+                React.createElement('p', null, 'لا يوجد مشتركون'))
             : filtered.map(sub => {
                 const due = parseFloat(sub.amount_due) || 0
                 return React.createElement('div', { key: sub.id, className: 'subscriber-item', onClick: () => openPaymentModal(sub) },
                   React.createElement('div', { className: 'info' },
                     React.createElement('div', { className: 'name' }, sub.name),
+                    sub.city && React.createElement('div', { className: 'city-badge' }, `📍 ${sub.city}`),
                     React.createElement('div', { className: 'details' }, sub.subscription_size)),
-                  React.createElement('div', { className: `amount ${due <= 0 ? 'paid' : ''}` }, due <= 0 ? 'مدفوع' : `${due.toLocaleString()} د.ع`))
+                  React.createElement('div', { className: `amount ${due <= 0 ? 'paid' : ''}` }, due <= 0 ? 'مدفوع' : `${due.toLocaleString()} ل.س`))
               })
         ),
         selectedSub && React.createElement('div', { className: 'modal-overlay', onClick: () => setSelectedSub(null) },
           React.createElement('div', { className: 'modal-content', onClick: e => e.stopPropagation() },
             React.createElement('h3', null, `💰 سداد - ${selectedSub.name}`),
+            selectedSub.city && React.createElement('div', { className: 'subscriber-detail' },
+              React.createElement('div', { className: 'label' }, 'المدينة'),
+              React.createElement('div', { className: 'value' }, selectedSub.city)),
             React.createElement('div', { className: 'subscriber-detail' },
               React.createElement('div', { className: 'label' }, 'المبلغ المتبقي'),
-              React.createElement('div', { className: 'value', style: { color: 'var(--danger)', fontSize: 18 } }, `${(parseFloat(selectedSub.amount_due) || 0).toLocaleString()} د.ع`)),
+              React.createElement('div', { className: 'value', style: { color: 'var(--danger)', fontSize: 20 } }, `${(parseFloat(selectedSub.amount_due) || 0).toLocaleString()} ل.س`)),
             React.createElement('div', { style: { marginTop: 12 } },
               React.createElement('div', { className: 'form-group' },
                 React.createElement('label', null, 'مبلغ الدفع'),
                 React.createElement('input', { type: 'number', value: paymentAmount, onChange: e => setPaymentAmount(e.target.value), placeholder: 'أدخل المبلغ المدفوع' })),
               React.createElement('div', { className: 'quick-amounts' },
                 [5000, 10000, 15000, 25000, 50000, 100000].map(amt =>
-                  React.createElement('button', { key: amt, type: 'button', className: 'quick-amount', onClick: () => setPaymentAmount(String(amt)) }, amt.toLocaleString())
-                )),
+                  React.createElement('button', { key: amt, type: 'button', className: 'quick-amount', onClick: () => setPaymentAmount(String(amt)) }, amt.toLocaleString()))),
               React.createElement('button', { className: 'btn btn-primary', onClick: handlePay, disabled: loading || !paymentAmount || parseFloat(paymentAmount) <= 0 },
                 loading ? 'جاري...' : '✅ تأكيد الدفع')
             ),
@@ -612,23 +749,22 @@ async addPayment(payment) {
               subPayments.map(p =>
                 React.createElement('div', { key: p.id, className: 'payment-row' },
                   React.createElement('span', null, new Date(p.created_at).toLocaleDateString('ar-IQ')),
-                  React.createElement('span', { className: 'payment-amount' }, `${parseFloat(p.amount).toLocaleString()} د.ع`))
-              )
+                  React.createElement('span', { className: 'payment-amount' }, `${parseFloat(p.amount).toLocaleString()} ل.س`)))
             ),
             React.createElement('button', { className: 'btn btn-outline', style: { marginTop: 12 }, onClick: () => setSelectedSub(null) }, 'إغلاق')
           )
         ),
-        React.createElement(Navbar, { active: 'payments' })
+        React.createElement(Navbar, { active: 'payments', setPage })
       )
     }
 
-    // --- App ---
+    // ========== APP ==========
     function App() {
       const [user, setUser] = useState(() => {
         const saved = localStorage.getItem('alhadel_user')
         return saved ? JSON.parse(saved) : null
       })
-      const [page, setPage] = useState('dashboard')
+      const [page, setPage] = useState('home')
       useEffect(() => {
         if (user) localStorage.setItem('alhadel_user', JSON.stringify(user))
         else localStorage.removeItem('alhadel_user')
@@ -640,9 +776,10 @@ async addPayment(payment) {
         content = React.createElement(Login, null)
       } else {
         switch (page) {
+          case 'add': content = React.createElement(AddSubscriber, null); break
           case 'subscribers': content = React.createElement(Subscribers, null); break
           case 'payments': content = React.createElement(Payments, null); break
-          default: content = React.createElement(Dashboard, null); break
+          default: content = React.createElement(Home, null); break
         }
       }
       return React.createElement(AuthContext.Provider, { value: contextValue }, content)
