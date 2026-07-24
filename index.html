@@ -22,10 +22,10 @@
       --gray: #3d3a3b;
       --gray-light: #f5f5f5;
       --dark: #161616;
-      --shadow: 0 4px 16px rgba(0,0,0,0.08);
-      --shadow-lg: 0 8px 32px rgba(0,0,0,0.12);
-      --radius: 14px;
-      --radius-sm: 10px;
+      --shadow: 0 6px 24px rgba(0,0,0,0.08);
+      --shadow-lg: 0 12px 48px rgba(0,0,0,0.12);
+      --radius: 20px;
+      --radius-sm: 14px;
     }
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
@@ -103,18 +103,18 @@
     .nav-item.active { color: var(--primary); }
     .nav-item .nav-icon { font-size: 22px; line-height: 1; }
     .subscriber-item {
-      background: var(--white); border-radius: var(--radius-sm); padding: 14px;
-      margin-bottom: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-      border: 1px solid rgba(185,167,121,0.1);
+      background: var(--white); border-radius: var(--radius-sm); padding: 18px 16px;
+      margin-bottom: 12px; box-shadow: var(--shadow);
+      border: 1px solid rgba(185,167,121,0.12);
       display: flex; justify-content: space-between; align-items: center; cursor: pointer;
       transition: transform 0.15s, box-shadow 0.2s;
     }
-    .subscriber-item:active { transform: scale(0.98); box-shadow: 0 1px 4px rgba(0,0,0,0.05); }
+    .subscriber-item:active { transform: scale(0.97); }
     .subscriber-item .info { flex: 1; }
-    .subscriber-item .name { font-weight: 700; font-size: 15px; color: var(--dark); }
+    .subscriber-item .name { font-weight: 700; font-size: 16px; color: var(--dark); }
     .subscriber-item .city-badge {
       display: inline-block; font-size: 11px; color: var(--primary);
-      background: rgba(66,129,119,0.08); padding: 2px 8px; border-radius: 4px; margin-top: 4px;
+      background: rgba(66,129,119,0.08); padding: 3px 10px; border-radius: 6px; margin-top: 5px;
     }
     .subscriber-item .details { font-size: 12px; color: var(--gray); margin-top: 4px; }
     .subscriber-item .amount { font-weight: 800; font-size: 17px; color: var(--danger); white-space: nowrap; }
@@ -146,15 +146,6 @@
       font-size: 13px; text-align: center; margin-bottom: 16px;
       border: 1px solid rgba(107,31,42,0.15);
     }
-    .custom-field-row { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; }
-    .custom-field-row input { flex: 1; }
-    .field-badge {
-      display: inline-flex; align-items: center; gap: 6px;
-      background: linear-gradient(135deg, rgba(66,129,119,0.08), rgba(66,129,119,0.04));
-      color: var(--primary-dark); border-radius: 8px; padding: 6px 12px;
-      font-size: 12px; margin: 3px; border: 1px solid rgba(66,129,119,0.1);
-    }
-    .field-badge .remove-field { cursor: pointer; font-weight: 700; color: var(--danger); margin-right: 4px; }
     .payment-row {
       display: flex; justify-content: space-between; align-items: center;
       padding: 10px 0; border-bottom: 1px solid #f0f0f0; font-size: 13px;
@@ -222,11 +213,11 @@
     .filter-row select:focus { border-color: var(--primary); }
 
     /* Dashboard Cards */
-    .dash-grid { display: flex; flex-direction: column; gap: 14px; padding-top: 8px; }
+    .dash-grid { display: flex; flex-direction: column; gap: 16px; padding-top: 8px; }
     .dash-card {
-      background: var(--white); border-radius: var(--radius); padding: 22px 20px;
+      background: var(--white); border-radius: var(--radius); padding: 28px 22px;
       box-shadow: var(--shadow); border: 1px solid rgba(185,167,121,0.1);
-      display: flex; align-items: center; gap: 16px; cursor: pointer;
+      display: flex; align-items: center; gap: 18px; cursor: pointer;
       transition: all 0.2s; position: relative; overflow: hidden;
     }
     .dash-card:active { transform: scale(0.98); }
@@ -303,14 +294,10 @@
       async getSubscribers() {
         try {
           const data = await supabaseFetch('subscribers?order=created_at.desc')
-          if (data) return data.map(s => ({
-            ...s, custom_fields: typeof s.custom_fields === 'string' ? JSON.parse(s.custom_fields) : (s.custom_fields || [])
-          }))
+          if (data) return data
         } catch {}
         const store = loadLocal()
-        return store.subscribers.map(s => ({
-          ...s, custom_fields: typeof s.custom_fields === 'string' ? JSON.parse(s.custom_fields) : (s.custom_fields || [])
-        }))
+        return store.subscribers
       },
       async addSubscriber(subscriber) {
         try {
@@ -366,17 +353,6 @@
           )
         }
         saveLocal(store); return newPayment
-      },
-      async getAllPayments() {
-        try {
-          const data = await supabaseFetch('payments?select=*,subscribers(name)&order=created_at.desc')
-          if (data) return data
-        } catch {}
-        const store = loadLocal()
-        return store.payments.map(p => ({
-          ...p,
-          subscriber_name: store.subscribers.find(s => s.id === p.subscriber_id)?.name || 'محذوف'
-        })).sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
       },
       // Admin auth
       async checkAdmin(email, password) {
@@ -512,9 +488,6 @@
       const [city, setCity] = useState('')
       const [subscriptionSize, setSubscriptionSize] = useState('')
       const [amountDue, setAmountDue] = useState('')
-      const [customFields, setCustomFields] = useState([])
-      const [fieldName, setFieldName] = useState('')
-      const [fieldValue, setFieldValue] = useState('')
       const [success, setSuccess] = useState('')
       const [error, setError] = useState('')
       const [stats, setStats] = useState({ total: 0, due: 0 })
@@ -524,18 +497,13 @@
         const subs = await db.getSubscribers()
         setStats({ total: subs.length, due: subs.reduce((s, sub) => s + (parseFloat(sub.amount_due) || 0), 0) })
       }
-      const addField = () => {
-        if (!fieldName.trim()) return
-        setCustomFields([...customFields, { name: fieldName.trim(), value: fieldValue.trim() }])
-        setFieldName(''); setFieldValue('')
-      }
       const handleSubmit = async (e) => {
         e.preventDefault()
         if (!name.trim() || !subscriptionSize.trim() || !amountDue.trim()) return
         setError(''); setSuccess('')
         try {
-          await db.addSubscriber({ name: name.trim(), city: city.trim(), subscription_size: subscriptionSize.trim(), amount_due: amountDue.trim(), custom_fields: customFields })
-          setName(''); setCity(''); setSubscriptionSize(''); setAmountDue(''); setCustomFields([])
+          await db.addSubscriber({ name: name.trim(), city: city.trim(), subscription_size: subscriptionSize.trim(), amount_due: amountDue.trim(), custom_fields: [] })
+          setName(''); setCity(''); setSubscriptionSize(''); setAmountDue('')
           setSuccess('تم إضافة المشترك بنجاح ✓'); loadStats()
           setTimeout(() => setSuccess(''), 3000)
         } catch (err) { setError('فشل الإضافة: ' + err.message); setTimeout(() => setError(''), 4000) }
@@ -564,19 +532,7 @@
               React.createElement('div', { className: 'form-group' },
                 React.createElement('label', null, 'المبلغ المطلوب (ليرة سورية)'),
                 React.createElement('input', { type: 'number', value: amountDue, onChange: e => setAmountDue(e.target.value), placeholder: 'مثال: 25000', required: true })),
-              React.createElement('div', { style: { borderTop: '1px solid #eee', paddingTop: 14, marginTop: 4 } },
-                React.createElement('label', { style: { fontSize: 13, fontWeight: 600, color: 'var(--gray)', display: 'block', marginBottom: 8 } }, '🏷️ حقول إضافية'),
-                customFields.map((field, idx) =>
-                  React.createElement('div', { key: idx, className: 'field-badge' },
-                    React.createElement('span', null, `${field.name}: ${field.value}`),
-                    React.createElement('span', { className: 'remove-field', onClick: () => setCustomFields(customFields.filter((_, i) => i !== idx)) }, '×'))
-                ),
-                React.createElement('div', { className: 'custom-field-row' },
-                  React.createElement('input', { value: fieldName, onChange: e => setFieldName(e.target.value), placeholder: 'اسم الحقل', style: { fontSize: 12 } }),
-                  React.createElement('input', { value: fieldValue, onChange: e => setFieldValue(e.target.value), placeholder: 'القيمة', style: { fontSize: 12 } }),
-                  React.createElement('button', { type: 'button', className: 'btn btn-small btn-outline', onClick: addField }, '➕'))
-              ),
-              React.createElement('button', { type: 'submit', className: 'btn btn-primary', style: { marginTop: 14 } }, '➕ إضافة مشترك')
+              React.createElement('button', { type: 'submit', className: 'btn btn-primary', style: { marginTop: 8 } }, '➕ إضافة مشترك')
             )
           )
         ),
@@ -628,9 +584,7 @@
                     React.createElement('div', { className: 'name' }, sub.name),
                     sub.city && React.createElement('div', { className: 'city-badge' }, `📍 ${sub.city}`),
                     React.createElement('div', { className: 'details' },
-                      sub.subscription_size +
-                      (sub.custom_fields && sub.custom_fields.length > 0
-                        ? ' • ' + sub.custom_fields.map(f => `${f.name}: ${f.value}`).join(' • ') : ''))
+                      sub.subscription_size)
                   ),
                   React.createElement('div', { className: `amount ${parseFloat(sub.amount_due) <= 0 ? 'paid' : ''}` },
                     parseFloat(sub.amount_due) <= 0 ? 'مدفوع' : `${Number(sub.amount_due).toLocaleString()} ل.س`)
@@ -650,10 +604,6 @@
               React.createElement('div', { className: 'label' }, 'المبلغ المطلوب'),
               React.createElement('div', { className: 'value', style: { color: parseFloat(selected.amount_due) <= 0 ? 'var(--primary)' : 'var(--danger)' } },
                 parseFloat(selected.amount_due) <= 0 ? 'مدفوع بالكامل' : `${Number(selected.amount_due).toLocaleString()} ل.س`)),
-            selected.custom_fields && selected.custom_fields.map((f, idx) =>
-              React.createElement('div', { key: idx, className: 'subscriber-detail' },
-                React.createElement('div', { className: 'label' }, f.name),
-                React.createElement('div', { className: 'value' }, f.value))),
             React.createElement('div', { className: 'subscriber-detail' },
               React.createElement('div', { className: 'label' }, 'تاريخ الإضافة'),
               React.createElement('div', { className: 'value' }, new Date(selected.created_at).toLocaleDateString('ar-IQ'))),
@@ -673,6 +623,7 @@
       const [search, setSearch] = useState('')
       const [selectedSub, setSelectedSub] = useState(null)
       const [paymentAmount, setPaymentAmount] = useState('')
+      const [recipientName, setRecipientName] = useState('')
       const [subPayments, setSubPayments] = useState([])
       const [loading, setLoading] = useState(false)
       const { setPage } = useContext(AuthContext)
@@ -681,14 +632,17 @@
         setSubscribers(await db.getSubscribers()); setPayments(await db.getAllPayments())
       }
       async function openPaymentModal(sub) {
-        setSelectedSub(sub); setPaymentAmount(''); setSubPayments(await db.getPayments(sub.id))
+        setSelectedSub(sub); setPaymentAmount(''); setRecipientName(''); setSubPayments(await db.getPayments(sub.id))
       }
       async function handlePay() {
         if (!paymentAmount || parseFloat(paymentAmount) <= 0) return
         const amount = parseFloat(paymentAmount); const remaining = parseFloat(selectedSub.amount_due)
         if (amount > remaining) { alert('المبلغ المدخل أكبر من المبلغ المتبقي'); return }
         setLoading(true)
-        try { await db.addPayment({ subscriber_id: selectedSub.id, amount }); setSelectedSub(null); setPaymentAmount(''); loadData() }
+        try {
+          await db.addPayment({ subscriber_id: selectedSub.id, amount, recipient_name: recipientName.trim() || 'المدير' })
+          setSelectedSub(null); setPaymentAmount(''); loadData()
+        }
         catch (err) { alert('فشل: ' + err.message) }
         setLoading(false)
       }
@@ -717,12 +671,18 @@
                 React.createElement('p', null, 'لا يوجد مشتركون'))
             : filtered.map(sub => {
                 const due = parseFloat(sub.amount_due) || 0
-                return React.createElement('div', { key: sub.id, className: 'subscriber-item', onClick: () => openPaymentModal(sub) },
+                return React.createElement('div', {
+                  key: sub.id,
+                  className: 'subscriber-item',
+                  onClick: () => openPaymentModal(sub),
+                  style: { borderRight: due <= 0 ? '4px solid var(--primary)' : '4px solid var(--danger)' }
+                },
                   React.createElement('div', { className: 'info' },
                     React.createElement('div', { className: 'name' }, sub.name),
                     sub.city && React.createElement('div', { className: 'city-badge' }, `📍 ${sub.city}`),
                     React.createElement('div', { className: 'details' }, sub.subscription_size)),
-                  React.createElement('div', { className: `amount ${due <= 0 ? 'paid' : ''}` }, due <= 0 ? 'مدفوع' : `${due.toLocaleString()} ل.س`))
+                  React.createElement('div', { className: `amount ${due <= 0 ? 'paid' : ''}` },
+                    due <= 0 ? 'مدفوع' : `${due.toLocaleString()} ل.س`))
               })
         ),
         selectedSub && React.createElement('div', { className: 'modal-overlay', onClick: () => setSelectedSub(null) },
@@ -732,24 +692,33 @@
               React.createElement('div', { className: 'label' }, 'المدينة'),
               React.createElement('div', { className: 'value' }, selectedSub.city)),
             React.createElement('div', { className: 'subscriber-detail' },
-              React.createElement('div', { className: 'label' }, 'المبلغ المتبقي'),
-              React.createElement('div', { className: 'value', style: { color: 'var(--danger)', fontSize: 20 } }, `${(parseFloat(selectedSub.amount_due) || 0).toLocaleString()} ل.س`)),
-            React.createElement('div', { style: { marginTop: 12 } },
+              React.createElement('div', { className: 'label' }, 'الاشتراك'),
+              React.createElement('div', { className: 'value' }, selectedSub.subscription_size)),
+            React.createElement('div', { className: 'subscriber-detail', style: { background: 'rgba(107,31,42,0.05)', borderRadius: 10, padding: '12px 10px', marginTop: 6 } },
+              React.createElement('div', { className: 'label', style: { fontSize: 13 } }, 'المبلغ المتبقي'),
+              React.createElement('div', { className: 'value', style: { color: 'var(--danger)', fontSize: 24, fontWeight: 800 } }, `${(parseFloat(selectedSub.amount_due) || 0).toLocaleString()} ل.س`)),
+            React.createElement('div', { style: { marginTop: 16 } },
               React.createElement('div', { className: 'form-group' },
-                React.createElement('label', null, 'مبلغ الدفع'),
-                React.createElement('input', { type: 'number', value: paymentAmount, onChange: e => setPaymentAmount(e.target.value), placeholder: 'أدخل المبلغ المدفوع' })),
+                React.createElement('label', null, 'المبلغ المقبوض (ل.س)'),
+                React.createElement('input', { type: 'number', value: paymentAmount, onChange: e => setPaymentAmount(e.target.value), placeholder: 'أدخل المبلغ المقبوض' })),
               React.createElement('div', { className: 'quick-amounts' },
                 [5000, 10000, 15000, 25000, 50000, 100000].map(amt =>
                   React.createElement('button', { key: amt, type: 'button', className: 'quick-amount', onClick: () => setPaymentAmount(String(amt)) }, amt.toLocaleString()))),
+              React.createElement('div', { className: 'form-group' },
+                React.createElement('label', null, 'اسم المستلم'),
+                React.createElement('input', { type: 'text', value: recipientName, onChange: e => setRecipientName(e.target.value), placeholder: 'اسم الشخص الذي قبض المبلغ' })),
               React.createElement('button', { className: 'btn btn-primary', onClick: handlePay, disabled: loading || !paymentAmount || parseFloat(paymentAmount) <= 0 },
                 loading ? 'جاري...' : '✅ تأكيد الدفع')
             ),
-            subPayments.length > 0 && React.createElement('div', { style: { marginTop: 16, borderTop: '1px solid #eee', paddingTop: 12 } },
-              React.createElement('div', { className: 'card-title', style: { fontSize: 13 } }, '📋 سجل الدفعات'),
-              subPayments.map(p =>
-                React.createElement('div', { key: p.id, className: 'payment-row' },
-                  React.createElement('span', null, new Date(p.created_at).toLocaleDateString('ar-IQ')),
-                  React.createElement('span', { className: 'payment-amount' }, `${parseFloat(p.amount).toLocaleString()} ل.س`)))
+            subPayments.length > 0 && React.createElement('div', { style: { marginTop: 16, borderTop: '2px solid #eee', paddingTop: 14 } },
+              React.createElement('div', { className: 'card-title', style: { fontSize: 14, marginBottom: 12 } }, '📋 سجل الدفعات'),
+              subPayments.map((p, i) =>
+                React.createElement('div', { key: p.id, className: 'payment-row', style: { background: i % 2 === 0 ? 'transparent' : 'rgba(0,0,0,0.02)', borderRadius: 8, padding: '10px 8px' } },
+                  React.createElement('div', { style: { display: 'flex', flexDirection: 'column', gap: 2 } },
+                    React.createElement('span', { style: { fontWeight: 600, fontSize: 14 } }, `${parseFloat(p.amount).toLocaleString()} ل.س`),
+                    React.createElement('span', { style: { fontSize: 11, color: 'var(--gray)' } }, `مستلم: ${p.recipient_name || 'المدير'}`)),
+                  React.createElement('span', { style: { fontSize: 11, color: 'var(--gray)' } }, new Date(p.created_at).toLocaleDateString('ar-IQ')))
+              )
             ),
             React.createElement('button', { className: 'btn btn-outline', style: { marginTop: 12 }, onClick: () => setSelectedSub(null) }, 'إغلاق')
           )
