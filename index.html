@@ -66,7 +66,7 @@
     }
     .header-btn:active { background: rgba(255,255,255,0.2); }
     .header-btn.right { left: auto; right: 16px; }
-    .page-content { flex: 1; padding: 20px; padding-bottom: 20px; overflow-y: auto; }
+    .page-content { flex: 1; padding: 20px; padding-bottom: 80px; overflow-y: auto; }
     .card {
       background: var(--white); border-radius: var(--radius); padding: 20px; margin-bottom: 16px;
       box-shadow: var(--shadow); border: 1px solid rgba(185,167,121,0.12);
@@ -96,6 +96,22 @@
     .btn-golden { background: linear-gradient(135deg, var(--golden-dark), var(--golden)); color: var(--white); }
     .btn-outline { background: transparent; border: 2px solid var(--primary); color: var(--primary); }
     .btn-small { padding: 8px 14px; font-size: 13px; width: auto; }
+    .bottom-nav {
+      position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+      max-width: 480px; width: 100%; background: var(--white);
+      display: flex; border-top: 1px solid rgba(185,167,121,0.15);
+      box-shadow: 0 -4px 20px rgba(0,0,0,0.08); z-index: 100;
+      padding: 8px 0; padding-bottom: env(safe-area-inset-bottom, 8px);
+    }
+    .nav-item {
+      flex: 1; text-align: center; padding: 4px; cursor: pointer;
+      color: var(--gray); font-size: 10px; font-weight: 500;
+      display: flex; flex-direction: column; align-items: center; gap: 1px;
+      background: none; border: none; font-family: inherit; transition: color 0.2s;
+    }
+    .nav-item.active { color: var(--primary); }
+    .nav-item .nav-icon { font-size: 20px; line-height: 1; }
+    .nav-item .nav-label { font-size: 10px; }
     .subscriber-item {
       background: var(--white); border-radius: var(--radius-sm); padding: 18px 16px;
       margin-bottom: 12px; box-shadow: var(--shadow);
@@ -408,6 +424,28 @@
       )
     }
 
+    // ========== NAVBAR ==========
+    function Navbar({ active }) {
+      const { setPage } = useContext(AuthContext)
+      const items = [
+        { key: 'home', icon: '🏠', label: 'الرئيسية' },
+        { key: 'add', icon: '➕', label: 'إضافة' },
+        { key: 'subscribers', icon: '👥', label: 'المشتركون' },
+        { key: 'payments', icon: '💰', label: 'السداد' },
+      ]
+      return React.createElement('nav', { className: 'bottom-nav' },
+        items.map(item =>
+          React.createElement('button', {
+            key: item.key, className: `nav-item ${active === item.key ? 'active' : ''}`,
+            onClick: () => setPage(item.key)
+          },
+            React.createElement('span', { className: 'nav-icon' }, item.icon),
+            React.createElement('span', { className: 'nav-label' }, item.label)
+          )
+        )
+      )
+    }
+
     // ========== HOME (Dashboard Cards) ==========
     function Home() {
       const { user, setPage, logout } = useContext(AuthContext)
@@ -449,7 +487,8 @@
               )
             )
           )
-        )
+        ),
+        React.createElement(Navbar, { active: 'home' })
       )
     }
 
@@ -507,7 +546,8 @@
               React.createElement('button', { type: 'submit', className: 'btn btn-primary', style: { marginTop: 8 } }, '➕ إضافة مشترك')
             )
           )
-        )
+        ),
+        React.createElement(Navbar, { active: 'add' })
       )
     }
 
@@ -584,6 +624,7 @@
               React.createElement('button', { className: 'btn btn-outline', onClick: () => setSelected(null), style: { flex: 1 } }, 'إغلاق'))
           )
         ),
+        React.createElement(Navbar, { active: 'subscribers' })
       )
     }
 
@@ -695,6 +736,7 @@
             React.createElement('button', { className: 'btn btn-outline', style: { marginTop: 12 }, onClick: () => setSelectedSub(null) }, 'إغلاق')
           )
         ),
+        React.createElement(Navbar, { active: 'payments' })
       )
     }
 
