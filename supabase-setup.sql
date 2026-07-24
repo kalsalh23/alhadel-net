@@ -15,6 +15,7 @@ CREATE TABLE IF NOT EXISTS payments (
   id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   subscriber_id BIGINT REFERENCES subscribers(id) ON DELETE CASCADE,
   amount NUMERIC NOT NULL,
+  recipient_name TEXT DEFAULT 'المدير',
   created_at TIMESTAMPTZ DEFAULT now()
 );
 
